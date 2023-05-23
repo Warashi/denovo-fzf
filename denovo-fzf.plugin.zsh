@@ -8,4 +8,4 @@ export DENOVO_FZF_USE_TMUX DENOVO_FZF_TMUX_OPTIONS
 function denovo-fzf-ghq-cd() {
   denovo_dispatch denovo-fzf ghq_cd >/dev/null
 }
-zle -N denovo-fzf-ghq
+zle -N denovo-fzf-ghq-cd
