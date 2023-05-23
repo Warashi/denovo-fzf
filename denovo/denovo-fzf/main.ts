@@ -34,10 +34,10 @@ async function ghq_cd(denovo: Denovo): Promise<void> {
 
 async function fzf(denovo: Denovo, ...input: string[]): Promise<string> {
   let fzfCommand = "fzf";
-  if (Deno.env.get("DENOVO_SELECTOR_FZF_USE_TMUX") === "1") {
+  if (Deno.env.get("DENOVO_FZF_USE_TMUX") === "1") {
     fzfCommand = "fzf-tmux";
   }
-  const fzfTmuxOptions = Deno.env.get("DENOVO_SELECTOR_FZF_TMUX_OPTIONS") ?? ""
+  const fzfTmuxOptions = Deno.env.get("DENOVO_FZF_TMUX_OPTIONS") ?? ""
   if (fzfTmuxOptions !== "") {
     fzfCommand = `${fzfCommand} ${fzfTmuxOptions}`;
   }
