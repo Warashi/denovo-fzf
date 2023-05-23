@@ -33,9 +33,18 @@ async function ghq_cd(denovo: Denovo): Promise<void> {
 }
 
 async function fzf(denovo: Denovo, ...input: string[]): Promise<string> {
+  let fzfCommand = "fzf";
+  if (Deno.env.get("DENOVO_SELECTOR_FZF_USE_TMUX") === "1") {
+    fzfCommand = "fzf-tmux";
+  }
+  const fzfTmuxOptions = Deno.env.get("DENOVO_SELECTOR_FZF_TMUX_OPTIONS") ?? ""
+  if (fzfTmuxOptions !== "") {
+    fzfCommand = `${fzfCommand} ${fzfTmuxOptions}`;
+  }
+
   const temp = await Deno.makeTempFile();
   await Deno.writeTextFile(temp, input.join("\n") + "\n");
-  return denovo.eval(`fzf < ${temp}`).finally(() => {
+  return denovo.eval(`${fzfCommand} < ${temp}`).finally(() => {
     Deno.removeSync(temp);
   });
 }
