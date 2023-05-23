@@ -37,7 +37,7 @@ async function fzf(denovo: Denovo, ...input: string[]): Promise<string> {
   if (Deno.env.get("DENOVO_FZF_USE_TMUX") === "1") {
     fzfCommand = "fzf-tmux";
   }
-  const fzfTmuxOptions = Deno.env.get("DENOVO_FZF_TMUX_OPTIONS") ?? ""
+  const fzfTmuxOptions = Deno.env.get("DENOVO_FZF_TMUX_OPTIONS") ?? "";
   if (fzfTmuxOptions !== "") {
     fzfCommand = `${fzfCommand} ${fzfTmuxOptions}`;
   }
