@@ -1,5 +1,7 @@
 {
   "tasks": {
-    "upgrade": "deno run --no-lock -A https://deno.land/x/udd/main.ts $(find . -name '*.ts')"
+    "upgrade": "deno run --no-lock -A https://deno.land/x/udd/main.ts $(find . -name '*.ts')",
+    "check": "deno check --unstable $(find . -name '*.ts')",
+    "lint": "deno lint --unstable $(find . -name '*.ts')"
   }
 }
