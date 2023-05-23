@@ -27,7 +27,9 @@ async function ghq_cd(denovo: Denovo): Promise<void> {
     return;
   }
   const target = await fzf(denovo, new TextDecoder().decode(out.stdout));
-  await denovo.eval(`cd "${target.trim()}"; BUFFER=""; zle accept-line;`);
+  if (target != "") {
+    await denovo.eval(`cd "${target.trim()}"; BUFFER=""; zle accept-line;`);
+  }
 }
 
 async function fzf(denovo: Denovo, ...input: string[]): Promise<string> {
