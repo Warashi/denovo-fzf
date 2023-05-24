@@ -6,6 +6,16 @@ you need to install [Deno][deno] and [denovo.zsh][denovo.zsh].
 [denovo.zsh]: https://github.com/Warashi/denovo.zsh/
 [deno]: https://deno.land/
 
+# Features
+- `denovo-fzf-ghq-cd`: change directory to directory managed by [ghq][ghq]
+
+[ghq]: https://github.com/x-motemen/ghq
+
+# Bindings example
+```zsh
+bindkey '^x' denovo-fzf-ghq-cd
+```
+
 # Options
 The following environment variables is used to controll fzf.
 
