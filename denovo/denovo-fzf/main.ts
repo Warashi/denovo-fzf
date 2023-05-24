@@ -1,4 +1,4 @@
-import type { Denovo } from "https://deno.land/x/denovo_core@v0.0.1/mod.ts";
+import type { Denovo } from "https://deno.land/x/denovo_core@v0.0.3/mod.ts";
 import {
   assertArray,
   isString,
