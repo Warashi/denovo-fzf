@@ -10,14 +10,14 @@ export function main(denovo: Denovo): Promise<void> {
       assertArray(input, isString);
       return fzf(denovo, ...input);
     },
-    ghq_cd(): Promise<void> {
-      return ghq_cd(denovo);
+    "ghq-cd"(): Promise<void> {
+      return ghqCD(denovo);
     },
   };
   return Promise.resolve();
 }
 
-async function ghq_cd(denovo: Denovo): Promise<void> {
+async function ghqCD(denovo: Denovo): Promise<void> {
   const cmd = new Deno.Command("ghq", {
     args: ["list", "-p"],
     stdout: "piped",
