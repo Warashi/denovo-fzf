@@ -1,10 +1,27 @@
-import type { Denovo } from "https://deno.land/x/denovo_core@v0.0.3/mod.ts";
+import type { Denovo } from "https://deno.land/x/denovo_core@v0.0.4/mod.ts";
 import {
   assertArray,
   isString,
 } from "https://deno.land/x/unknownutil@v2.1.1/mod.ts";
+import { z } from "https://deno.land/x/zod@v3.21.4/mod.ts";
+
+type Config = z.infer<typeof Config>;
+const Config = z.object({
+  "fzf-tmux": z.boolean().optional(),
+  "fzf-options": z.string().optional(),
+});
+
+function isConfig(x: unknown): x is Config {
+  return Config.safeParse(x).success;
+}
+
+let config: Config = {};
 
 export function main(denovo: Denovo): Promise<void> {
+  if (isConfig(denovo.config)) {
+    config = denovo.config;
+  }
+  console.log(config);
   denovo.dispatcher = {
     fzf(...input: unknown[]): Promise<string> {
       assertArray(input, isString);
@@ -34,17 +51,16 @@ async function ghqCD(denovo: Denovo): Promise<void> {
 
 async function fzf(denovo: Denovo, ...input: string[]): Promise<string> {
   let fzfCommand = "fzf";
-  if (Deno.env.get("DENOVO_FZF_USE_TMUX") === "1") {
+  if (config["fzf-tmux"] ?? false) {
     fzfCommand = "fzf-tmux";
   }
-  const fzfTmuxOptions = Deno.env.get("DENOVO_FZF_TMUX_OPTIONS") ?? "";
-  if (fzfTmuxOptions !== "") {
-    fzfCommand = `${fzfCommand} ${fzfTmuxOptions}`;
-  }
+  const fzfTmuxOptions = config["fzf-options"] ?? "";
 
   const temp = await Deno.makeTempFile();
   await Deno.writeTextFile(temp, input.join("\n") + "\n");
-  return denovo.eval(`${fzfCommand} < ${temp}`).finally(() => {
-    Deno.removeSync(temp);
-  });
+  return denovo.eval(`${fzfCommand} ${fzfTmuxOptions} < ${temp}`).finally(
+    () => {
+      Deno.removeSync(temp);
+    },
+  );
 }

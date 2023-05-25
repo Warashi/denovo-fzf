@@ -17,10 +17,14 @@ bindkey '^x' denovo-fzf-ghq-cd
 ```
 
 # Options
-The following environment variables is used to controll fzf.
+You can set options in config file: `$XDG_CONFIG_HOME/denovo/config.toml` or `$HOME/.config/denovo/config.toml`.
+For example:
 
-- `DENOVO_FZF_USE_TMUX`: set `1` to use fzf-tmux
-- `DENOVO_FZF_TMUX_OPTIONS`: set options to pass to fzf-tmux
+```toml
+[plugins.denovo-fzf]
+fzf-tmux = true
+fzf-options = "-p 80%"
+```
 
 # License
 The code follows MIT license written in [LICENSE][./LICENSE]. Contributors need to agree that any modifications sent in this repository follow the license.
