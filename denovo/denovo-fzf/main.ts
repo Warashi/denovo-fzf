@@ -45,7 +45,7 @@ async function ghqCD(denovo: Denovo): Promise<void> {
     return;
   }
   const previewCommand = config["ghq-cd-preview"] ?? "cat {}/README.md"
-  const target = await fzfPreview(denovo, previewCommand, new TextDecoder().decode(out.stdout));
+  const target = await fzfPreview(denovo, previewCommand, new TextDecoder().decode(out.stdout).trim());
   if (target != "") {
     await denovo.eval(`cd "${target.trim()}"; BUFFER=""; zle accept-line;`);
   }
@@ -60,7 +60,7 @@ async function fzf(denovo: Denovo, ...input: string[]): Promise<string> {
 
   const temp = await Deno.makeTempFile();
   await Deno.writeTextFile(temp, input.join("\n") + "\n");
-  return denovo.eval(`${fzfCommand} --ansi ${fzfTmuxOptions} < ${temp}`).finally(
+  return denovo.eval(`${fzfCommand} --tac --ansi ${fzfTmuxOptions} < ${temp}`).finally(
     () => {
       Deno.removeSync(temp);
     },
@@ -76,7 +76,7 @@ async function fzfPreview(denovo: Denovo, previewCommand: string, ...input: stri
 
   const temp = await Deno.makeTempFile();
   await Deno.writeTextFile(temp, input.join("\n") + "\n");
-  return denovo.eval(`${fzfCommand} --ansi ${fzfTmuxOptions} --preview '${previewCommand}' < ${temp}`).finally(
+  return denovo.eval(`${fzfCommand} --tac --ansi ${fzfTmuxOptions} --preview '${previewCommand}' < ${temp}`).finally(
     () => {
       Deno.removeSync(temp);
     },
