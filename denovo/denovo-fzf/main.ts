@@ -22,7 +22,6 @@ export function main(denovo: Denovo): Promise<void> {
   if (isConfig(denovo.config)) {
     config = denovo.config;
   }
-  console.log(config);
   denovo.dispatcher = {
     fzf(...input: unknown[]): Promise<string> {
       assertArray(input, isString);
