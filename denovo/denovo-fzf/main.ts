@@ -46,12 +46,10 @@ async function ghqCD(denovo: Denovo): Promise<void> {
     return;
   }
   const previewCommand = config["ghq-cd-preview"] ?? "cat {}/README.md";
-  const fzfOptions = (config["fzf-options"] ?? "") +
-    ` --preview '${previewCommand}'`;
-
-  const target = await fzf(
+  const target = await fzfPreview(
     denovo,
-    { ...config, "fzf-options": fzfOptions },
+    config,
+    previewCommand,
     new TextDecoder().decode(out.stdout).trim(),
   );
   if (target != "") {
