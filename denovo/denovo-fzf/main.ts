@@ -19,6 +19,12 @@ export function main(denovo: Denovo): Promise<void> {
     config = denovo.config;
   }
   denovo.dispatcher = {
+    fzf(...args: string[]): Promise<string> {
+      return fzf(denovo, ...args);
+    },
+    "fzf-preview"(previewCommand: string, ...args: string[]): Promise<string> {
+      return fzfPreview(denovo, previewCommand, ...args);
+    },
     "ghq-cd"(): Promise<void> {
       return ghqCD(denovo);
     },
