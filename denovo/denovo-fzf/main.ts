@@ -61,12 +61,12 @@ async function fzf(denovo: Denovo, ...input: string[]): Promise<string> {
 
   const temp = await Deno.makeTempFile();
   await Deno.writeTextFile(temp, input.join("\n") + "\n");
-  return denovo.eval(`${fzfCommand} --tac --ansi ${fzfTmuxOptions} < ${temp}`)
-    .finally(
-      () => {
-        Deno.removeSync(temp);
-      },
-    );
+  const selected = await denovo.eval(
+    `${fzfCommand} --ansi ${fzfTmuxOptions} < ${temp}`,
+  ).finally(() => {
+    Deno.removeSync(temp);
+  });
+  return selected ?? "";
 }
 
 async function fzfPreview(
@@ -82,11 +82,10 @@ async function fzfPreview(
 
   const temp = await Deno.makeTempFile();
   await Deno.writeTextFile(temp, input.join("\n") + "\n");
-  return denovo.eval(
-    `${fzfCommand} --tac --ansi ${fzfTmuxOptions} --preview '${previewCommand}' < ${temp}`,
-  ).finally(
-    () => {
-      Deno.removeSync(temp);
-    },
-  );
+  const selected = await denovo.eval(
+    `${fzfCommand} --ansi ${fzfTmuxOptions} --preview '${previewCommand}' < ${temp}`,
+  ).finally(() => {
+    Deno.removeSync(temp);
+  });
+  return selected ?? "";
 }
