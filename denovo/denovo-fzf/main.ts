@@ -20,10 +20,10 @@ export function main(denovo: Denovo): Promise<void> {
   }
   denovo.dispatcher = {
     fzf(...args: string[]): Promise<string> {
-      return fzf(denovo, ...args);
+      return fzf(denovo, config, ...args);
     },
     "fzf-preview"(previewCommand: string, ...args: string[]): Promise<string> {
-      return fzfPreview(denovo, previewCommand, ...args);
+      return fzfPreview(denovo, config, previewCommand, ...args);
     },
     "ghq-cd"(): Promise<void> {
       return ghqCD(denovo);
@@ -42,9 +42,12 @@ async function ghqCD(denovo: Denovo): Promise<void> {
     return;
   }
   const previewCommand = config["ghq-cd-preview"] ?? "cat {}/README.md";
-  const target = await fzfPreview(
+  const fzfOptions = (config["fzf-options"] ?? "") +
+    ` --preview '${previewCommand}'`;
+
+  const target = await fzf(
     denovo,
-    previewCommand,
+    { ...config, "fzf-options": fzfOptions },
     new TextDecoder().decode(out.stdout).trim(),
   );
   if (target != "") {
@@ -52,7 +55,11 @@ async function ghqCD(denovo: Denovo): Promise<void> {
   }
 }
 
-async function fzf(denovo: Denovo, ...input: string[]): Promise<string> {
+async function fzf(
+  denovo: Denovo,
+  config: Config,
+  ...input: string[]
+): Promise<string> {
   let fzfCommand = "fzf";
   if (config["fzf-tmux"] ?? false) {
     fzfCommand = "fzf-tmux";
@@ -69,23 +76,13 @@ async function fzf(denovo: Denovo, ...input: string[]): Promise<string> {
   return selected ?? "";
 }
 
-async function fzfPreview(
+function fzfPreview(
   denovo: Denovo,
+  config: Config,
   previewCommand: string,
   ...input: string[]
-): Promise<string> {
-  let fzfCommand = "fzf";
-  if (config["fzf-tmux"] ?? false) {
-    fzfCommand = "fzf-tmux";
-  }
-  const fzfTmuxOptions = config["fzf-options"] ?? "";
-
-  const temp = await Deno.makeTempFile();
-  await Deno.writeTextFile(temp, input.join("\n") + "\n");
-  const selected = await denovo.eval(
-    `${fzfCommand} --ansi ${fzfTmuxOptions} --preview '${previewCommand}' < ${temp}`,
-  ).finally(() => {
-    Deno.removeSync(temp);
-  });
-  return selected ?? "";
+) {
+  const fzfOptions = (config["fzf-options"] ?? "") +
+    ` --preview '${previewCommand}'`;
+  return fzf(denovo, { ...config, "fzf-options": fzfOptions }, ...input);
 }
