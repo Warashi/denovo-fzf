@@ -52,8 +52,8 @@ async function ghqCD(denovo: Denovo): Promise<void> {
     previewCommand,
     new TextDecoder().decode(out.stdout).trim(),
   );
-  if (target != "") {
-    await denovo.eval(`cd "${target.trim()}"; BUFFER=""; zle accept-line;`);
+  if (target !== "") {
+    await denovo.eval(`cd "${target}"; BUFFER=""; zle accept-line;`);
   }
 }
 
@@ -70,11 +70,11 @@ async function fzf(
 
   const temp = await Deno.makeTempFile();
   await Deno.writeTextFile(temp, input.join("\n") + "\n");
-  const selected = await denovo.eval(
+  const selected = (await denovo.eval(
     `${fzfCommand} --ansi ${fzfTmuxOptions} < ${temp}`,
   ).finally(() => {
     Deno.removeSync(temp);
-  });
+  })).trim();
   return selected ?? "";
 }
 
