@@ -25,6 +25,10 @@ export function main(denovo: Denovo): Promise<void> {
     "fzf-preview"(previewCommand: string, ...args: string[]): Promise<string> {
       return fzfPreview(denovo, config, previewCommand, ...args);
     },
+    "fzf-with-options"(option: string, ...args: string[]): Promise<string> {
+      const fzfOptions = [config["fzf-options"] ?? "", option].join(" ");
+      return fzf(denovo, { ...config, "fzf-options": fzfOptions }, ...args);
+    },
     "ghq-cd"(): Promise<void> {
       return ghqCD(denovo);
     },
