@@ -21,7 +21,7 @@ You can set options in config file: `$XDG_CONFIG_HOME/denovo/config.toml` or `$H
 For example:
 
 ```toml
-[plugins.denovo-fzf]
+[plugins.fzf]
 fzf-tmux = true
 fzf-options = "-p 80%"
 ```
